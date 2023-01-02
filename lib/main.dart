@@ -1,32 +1,12 @@
-import 'dart:async';
-import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:csv/csv.dart';
 import 'package:untitled/pages/takepicturescreen.dart';
 import 'package:camera/camera.dart';
-import 'package:untitled/pages/photopage.dart';
 import 'package:untitled/pages/searchpage.dart';
 import 'package:untitled/pages/settingpage.dart';
 
-// void asdf() async {
-//   // Ensure that plugin services are initialized so that `availableCameras()`
-//   // can be called before `runApp()`
-//   WidgetsFlutterBinding.ensureInitialized();
-//   // Obtain a list of the available cameras on the device.
-//   final cameras = await availableCameras();
-//   final firstCamera = cameras[0];
-//   // Get a specific camera from the list of available cameras.
-// }
 
-
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  // Obtain a list of the available cameras on the device.
-  final cameras = await availableCameras();
-  final firstCamera = cameras[0];
-
+void main() {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
