@@ -49,6 +49,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   int tapNumber = 0;
+  Icon flash = Icon(Icons.flash_on_outlined,
+    color: Colors.black,
+    size: 40,);
 
   @override
   Widget build(BuildContext context) {
@@ -72,12 +75,13 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton:
       getFloatingButtons(),
+
     );
   }
   Widget getFloatingButtons() {
     return
       Padding(
-      padding: const EdgeInsets.only(bottom:10),
+      padding: const EdgeInsets.only(bottom:20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         //아마 root app의 height인 90이상으로 SizedBox 넣어줘야 할듯 아래에 Row 밑에 넣음
@@ -86,7 +90,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(width: 40),
+              SizedBox(width: 45),
               IconButton(
                 onPressed: () async{
                   //Take the Picture in a try / catch block.
@@ -115,29 +119,31 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                 icon: Icon(
                     Icons.camera,
                 color: Colors.black,),
-                  iconSize:80.0,
+                  iconSize:100.0,
                 padding: EdgeInsets.all(0.0),
-                splashRadius: 36.0,
+                splashRadius: 45.0,
               ),
 
               // SizedBox(width: 120),
               IconButton(
-                icon: Icon(
-                  Icons.flash_on_outlined,
-                  color: Colors.black,
-                  size: 40,
-                ),
-                iconSize:40,
+                icon: flash,
+                iconSize:45,
                 padding: EdgeInsets.all(0.0),
-                splashRadius: 20.0,
+                splashRadius: 25.0,
                 onPressed: ()=> setState(() {
                  if (tapNumber == 0) {
                    _controller.setFlashMode(FlashMode.always);
                   tapNumber = 1;
+                   flash = Icon(
+                     Icons.flash_off_outlined,
+                   );
                  print("flashmode on");}
                  else {
                   _controller.setFlashMode(FlashMode.off);
                   tapNumber = 0;
+                  flash = Icon(
+                    Icons.flash_on_outlined,
+                  );
                  print("flashmode off");}
                 },
                 ),
@@ -145,7 +151,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                 //   _controller.setFlashMode(FlashMode.always);
                 //   // print('flashmode_is_on');
                 // },
-              ),],
+              ),
+            ],
           ),
           // SizedBox(
           //   height: 90,

@@ -5,8 +5,24 @@ class SettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text("SettingPage"),
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          children: [
+            SizedBox(
+                height: 50,
+                child: Text("음성 안내")),
+            SizedBox(
+                height: 50,
+                child: Text("앱 안내 듣기")),
+            SizedBox(
+                height: 50,
+                child: Text("SettingPage")),
+
+          ],
+        ),
+      ),
     );
   }
 }
