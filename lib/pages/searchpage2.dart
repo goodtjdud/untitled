@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:text_to_speech/text_to_speech.dart';
 
 class SearchedPage extends StatelessWidget {
   SearchedPage({Key? key, required this.mediinfo})
       : super(key: key); //const였는데 tts때문에 뺌
   final Map mediinfo;
+  TextToSpeech tts = TextToSpeech();
 
   // FlutterTts flutterTts = FlutterTts();
   // speak() {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:untitled/pages/searchpage2.dart';
 
 
@@ -99,21 +98,31 @@ class _SearchPageState extends State<SearchPage> {
     // loadingCSV();
     return Scaffold(
       body: SafeArea(
-            child: Column(
-            children: <Widget>[
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextField(
-            onChanged: (value) => _runFilter(value),
-            controller: editingController,
-            decoration: InputDecoration(
-                labelText: "Search",
-                hintText: "Search",
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(25.0)))),
-        ),
-      ),
+        child: Builder(builder: (context) {
+      return GestureDetector(
+        //화면 아무곳이나 터치하면 그냥키보드 내려가도록 추가 기능은 함
+        //safearea빼고 하니까 됨
+        //애매하긴 하다. 작동은 되는데 이게 터치하면 어차피 페이지 이동해서
+        //찾는 약품이 없거나 혹은 약품들이 수가 줄어들면 사용됨.
+        //처음 화면에서 검색만 하려고 했을때는 빈 공간이 거의 없긴 함.
+        // 보이스 어시스턴트 기능 킨 채로도 한번 탭 혹은 두번의 탭으로 내려가는지 확인하기.
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Column(children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              onChanged: (value) => _runFilter(value),
+              controller: editingController,
+              decoration: InputDecoration(
+                  labelText: "Search",
+                  hintText: "Search",
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+            ),
+          ),
       Expanded(
         child: _foundUsers.isNotEmpty
           ? ListView.builder(
@@ -162,7 +171,9 @@ class _SearchPageState extends State<SearchPage> {
               ),
       ]
     ),
-          ),
+          );
+        }),
+      ),
     );
   }
 }

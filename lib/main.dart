@@ -1,12 +1,13 @@
 
 import 'package:flutter/material.dart';
-import 'package:untitled/pages/takepicturescreen.dart';
+import '../pages/takepicturescreen.dart';
 import 'package:camera/camera.dart';
 import 'package:untitled/pages/searchpage.dart';
 import 'package:untitled/pages/settingpage.dart';
 
 
-void main() {
+
+void main() async{
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -14,9 +15,6 @@ void main() {
         fontFamily: "Score",
         primarySwatch: Colors.green,
         appBarTheme: AppBarTheme(
-          textTheme: TextTheme(
-            headline6: TextStyle(color: Colors.black, fontSize:30),
-          ),
           iconTheme: IconThemeData(color: Colors.black),
         ),
       ),
@@ -27,35 +25,60 @@ void main() {
 }
 
 
+
+
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
+
   @override
+
   State<MainPage> createState() => _MainPageState();
 }
 
-
-
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
+  Future<CameraDescription> cameraA() async {
+    final cameras = await availableCameras();
+    final firstCamera = cameras.first;
+    return firstCamera;
+  }
+
+
+
 
 
   @override
 
+
+
   Widget build(BuildContext context) {
 
-    final CameraDescription cameraa;
-    cameraa = CameraDescription(name: '0',
-        lensDirection: CameraLensDirection.back,
-        sensorOrientation: 90);
 
 
       return Scaffold(
-        body: IndexedStack(
+        body:
+        IndexedStack(
           index: _selectedIndex,
-          children: [
+          children:
+          [
             SearchPage(),
-            TakePictureScreen(camera: cameraa),
+            FutureBuilder(
+                future: cameraA(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData == false) {
+                    return CircularProgressIndicator();
+                  }
+                  else if (snapshot.hasError) {
+                    return Center(
+                        child: Text("Error: ${snapshot.error}")
+                    );
+                  }
+                  else {
+                    final theCamera = snapshot.data;
+                    return TakePictureScreen(camera: theCamera);
+                  }
+                }),
             SettingPage(),
           ],
         ),
