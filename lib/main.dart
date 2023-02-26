@@ -12,7 +12,6 @@ void main() async{
     MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: "Score",
         primarySwatch: Colors.green,
         appBarTheme: AppBarTheme(
           iconTheme: IconThemeData(color: Colors.black),

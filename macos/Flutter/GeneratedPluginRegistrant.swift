@@ -7,7 +7,7 @@ import Foundation
 
 import audioplayers_darwin
 import flutter_tts
-import path_provider_macos
+import path_provider_foundation
 import text_to_speech_macos
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {

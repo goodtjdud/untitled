@@ -23,31 +23,84 @@ class TakePictureScreen extends StatefulWidget {
   TakePictureScreenState createState() => TakePictureScreenState();
 }
 
-class TakePictureScreenState extends State<TakePictureScreen> {
-  late CameraController _controller;
-  late Future<void> _initializeControllerFuture;
+class TakePictureScreenState extends State<TakePictureScreen>
+    with WidgetsBindingObserver {
+  CameraController? _controller;
+  bool active = true;
+
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // To display the current output from the Camera,
     // create a CameraController.
-    _controller = CameraController(
-      // Get a specific camera from the list of available cameras.
-      widget.camera,
-      // Define the resolution to use.
-      ResolutionPreset.medium,
-    );
-
-    // Next, initialize the controller. This returns a Future.
-    _initializeControllerFuture = _controller.initialize();
+    _initCamera();
   }
 
   @override
   void dispose() {
     // Dispose of the controller when the widget is disposed.
-    _controller.dispose();
+    _controller?.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      // _initCamera();
+      print("Resumed");
+      _initCamera();
+      // _controller?.resumePreview();
+    }
+    // else if (state == AppLifecycleState.inactive) {
+    //   active = false;
+    //   print("Inactive");
+    // } else if (state == AppLifecycleState.detached) {
+    //   print ("Detached");
+    // }
+    else if (state == AppLifecycleState.paused) {
+      print("Paused");
+      _controller?.pausePreview();
+    }
+  }
+
+  _initCamera() {
+    Future.delayed(Duration(milliseconds: 300)).then((value) {
+      availableCameras().then((value) async{
+        if (!mounted) {
+          return;
+        }
+        if (value.isEmpty) {
+          setState(() {
+            active = false;
+          });
+          return;
+        }
+        await _setupCamera(value);
+      });
+    });
+  }
+
+  _setupCamera (List<CameraDescription> value) async {
+    try {
+      final cameraController = CameraController(value[0], ResolutionPreset.medium);
+      cameraController.addListener(() {});
+      _controller = cameraController;
+
+      await _controller?.initialize();
+      if (!mounted) {
+        return;
+      }
+      setState(() {});
+    } catch (e) {
+      setState(() {
+        active = false;
+      });
+      print("Failed to create camera with $e");
+    }
   }
 
   int tapNumber = 0;
@@ -63,11 +116,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       // camera preview. Use a FutureBuilder to display a loading spinner until the
       // controller has finished initializing.
       body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
+        future: _controller?.initialize(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             // If the Future is complete, display the preview.
-            return CameraPreview(_controller);
+            return CameraPreview(_controller!);
           } else {
             // Otherwise, display a loading indicator.
             return const Center(child: CircularProgressIndicator());
@@ -100,11 +153,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                   // catch the error.
                   try {
                     // Ensure that the camera is initialized.
-                    await _initializeControllerFuture;
+                    await _controller?.initialize();
 
                     // Attempt to take a picture and get the file `image`
                     // where it was saved.
-                    final image = await _controller.takePicture();
+                    final image = await _controller!.takePicture();
                     postRequest() async {
                       File imageFile = File(image.path);
                       List<int> imageBytes = imageFile.readAsBytesSync();
@@ -159,14 +212,14 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                 splashRadius: 25.0,
                 onPressed: ()=> setState(() {
                  if (tapNumber == 0) {
-                   _controller.setFlashMode(FlashMode.always);
+                   _controller!.setFlashMode(FlashMode.always);
                   tapNumber = 1;
                    flash = Icon(
                      Icons.flash_off_outlined,
                    );
                  print("flashmode on");}
                  else {
-                  _controller.setFlashMode(FlashMode.off);
+                  _controller!.setFlashMode(FlashMode.off);
                   tapNumber = 0;
                   flash = Icon(
                     Icons.flash_on_outlined,
@@ -205,4 +258,4 @@ class DisplayPictureScreen extends StatelessWidget {
       body: Image.file(File(imagePath)),
     );
   }
-}
+}`
