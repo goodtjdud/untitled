@@ -1,4 +1,5 @@
-
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../pages/takepicturescreen.dart';
 import 'package:camera/camera.dart';
@@ -7,7 +8,11 @@ import 'package:untitled/pages/settingpage.dart';
 
 
 
-void main() async{
+Future<void> main() async{
+
+
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -47,6 +52,7 @@ class _MainPageState extends State<MainPage> {
 
 
 
+
   @override
 
 
@@ -66,6 +72,7 @@ class _MainPageState extends State<MainPage> {
                 future: cameraA(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData == false) {
+                    print('error here');
                     return CircularProgressIndicator();
                   }
                   else if (snapshot.hasError) {

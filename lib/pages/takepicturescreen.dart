@@ -117,11 +117,13 @@ class TakePictureScreenState extends State<TakePictureScreen>
       // controller has finished initializing.
       body: FutureBuilder<void>(
         future: _controller?.initialize(),
-        builder: (context, snapshot) {
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             // If the Future is complete, display the preview.
-            return CameraPreview(_controller!);
+            return
+              CameraPreview(_controller!);
           } else {
+            print("connection not done");
             // Otherwise, display a loading indicator.
             return const Center(child: CircularProgressIndicator());
           }
