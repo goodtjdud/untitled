@@ -37,7 +37,7 @@ dependencies:
   font_awesome_flutter: ^9.0.0
   intl: ^0.17.0
   csv: ^5.0.0
-  camera: ^0.10.3
+  camera: ^0.10.3+2
   path_provider: ^2.0.11
   path: ^1.8.1
   http: ^0.13.5
